@@ -1,9 +1,8 @@
-const http = require('http')
 const fs = require('fs')
 
-const server = http.createServer((req, res) => {
-  const url = req.url
-  const method = req.method
+const requestHandler = (req, res) => {
+
+  const { url, method } = req
 
   if (url === '/') {
 
@@ -23,25 +22,42 @@ const server = http.createServer((req, res) => {
       body.push(chunk)
     })
 
-    req.on('end', () => {
+    return req.on('end', () => {
       const parsedBody = Buffer.concat(body).toString()
       const message = parsedBody.split('=')[1]
-      fs.writeFileSync('message.txt', message)
+
+      fs.writeFile('message.txt', message, (err) => {
+
+        res.statusCode = 302
+        res.setHeader('Location', '/')
+
+        return res.end()
+      })
+
     })
-
-    res.statusCode = 302
-    res.setHeader('Location', '/')
-
-    return res.end()
   }
-  console.log(url, method)
-  //console.log(req)
+
   res.setHeader('Content-Type', 'text/html')
   res.write('<html>')
   res.write('<head><title>My first page</title><link rel="icon" href="data:,"></head>')
   res.write('<body><h1>Hello World</h1></body>')
   res.write('</html>')
   res.end()
-})
+}
 
-server.listen(3000)
+
+// ANOTHER WAY
+// module.exports = { 
+//   handler: requestHandler,
+//   someText: "Some hard coded test"
+// }
+
+// ANOTHER WAY
+// module.exports.handler = requestHandler
+// module.exports.someText = "Some hard coded test" 
+
+// ANOTHER WAY
+// exports.handler = requestHandler
+// exports.someText = "Some hard coded test" 
+
+module.exports = requestHandler

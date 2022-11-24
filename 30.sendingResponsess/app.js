@@ -12,4 +12,4 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(4000)
+server.listen(3000)

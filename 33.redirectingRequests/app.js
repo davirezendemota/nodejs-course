@@ -19,7 +19,7 @@ const server = http.createServer((req, res) => {
     fs.writeFileSync('message.txt', 'DUMMY')
     res.statusCode = 302
     res.setHeader('Location', '/')
-    
+
     return res.end()
   }
   console.log(url, method)
@@ -32,4 +32,4 @@ const server = http.createServer((req, res) => {
   res.end()
 })
 
-server.listen(4000)
+server.listen(3000)
